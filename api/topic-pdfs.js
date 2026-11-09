@@ -1,4 +1,4 @@
-import { db, storage, auth } from "hatchable";
+import { db, storage } from "hatchable";
 import crypto from "node:crypto";
 
 export const access = "user";
@@ -6,7 +6,7 @@ export const methods = ["GET","POST","DELETE"];
 const MAX_BYTES = 25 * 1024 * 1024;
 
 export default async function(req,res){
-  const user=await auth.getUser(req);
+  const user=req.user;
   if(!user)return res.status(401).json({error:"Please sign in to manage PDFs"});
   if(req.method==="GET"){
     const slug=String(req.query?.slug||"").trim();
