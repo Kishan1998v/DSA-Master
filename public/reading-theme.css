@@ -64,3 +64,26 @@ body[data-palette="sage"]{--reader-bg:#f2f5ef;--reader-paper:#f9fbf6;--reader-in
 body[data-palette="porcelain"] .resource-card,body[data-palette="porcelain"] .topic-question,body[data-palette="porcelain"] .note-reading{background:#f5f7f5!important}
 body[data-palette="sage"] .resource-card,body[data-palette="sage"] .topic-question,body[data-palette="sage"] .note-reading{background:#eef3eb!important}
 @media(max-width:760px){.right-panel{padding:24px 17px}.lesson-topline{align-items:flex-start;flex-direction:column}.resource-list{grid-template-columns:1fr}.lesson-actions{width:100%}.lesson-actions .btn{flex:1}.lesson-title{font-size:26px!important}}
+/* Palette tokens are applied to the complete workspace, not only the reader */
+body{background:var(--canvas)!important;color:var(--ink)!important}
+.topbar,.sidebar,.right-panel{background:var(--paper)!important;color:var(--ink)!important;border-color:var(--line)!important}
+.main{background:var(--canvas)!important;color:var(--ink)!important}
+.tree-heading h1,.view-heading h1,.branch-title,.child-name,.right-panel h2,.right-panel h3,.brand{color:var(--ink)!important}
+.tree-canvas{background:transparent!important}
+.branch,.child-node{background:var(--surface)!important;border-color:var(--line)!important}
+.branch:hover,.child-node:hover{background:var(--paper)!important}
+.child-node{border-color:transparent!important}
+.children{border-left-color:var(--line)!important}
+.grandchildren{border-left-color:var(--line)!important}
+.nav-btn{color:var(--muted)!important}
+.nav-btn.active,.nav-btn:hover{background:var(--accent-soft)!important;color:var(--ink)!important}
+.search,.btn,.theme-trigger{background:var(--surface)!important;color:var(--ink)!important;border-color:var(--line)!important}
+.btn.primary{background:var(--accent)!important;color:#fff!important;border-color:var(--accent)!important}
+.tree-heading p,.right-panel p,.branch-meta,.child-kind,.child-progress,.tree-count{color:var(--muted)!important}
+.theme-menu{background:var(--paper)!important;border-color:var(--line)!important}
+.theme-menu button{color:var(--ink)!important}
+.progress-track{background:var(--warm)!important}
+.resource-card,.topic-question,.note-reading,.thread-links button{background:var(--warm)!important;color:var(--ink)!important}
+.section-eyebrow,.panel-kicker{color:var(--muted)!important}
+.lesson-status,.lesson-description{color:var(--muted)!important}
+.node-count{color:var(--muted)!important}
