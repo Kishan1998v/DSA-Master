@@ -1,0 +1,24 @@
+/* Resizable boundary between the syllabus and lesson reader */
+.layout{grid-template-columns:190px minmax(300px,var(--tree-width,46%)) 12px minmax(340px,1fr);column-gap:0}
+.layout.sidebar-hidden{grid-template-columns:0 minmax(300px,var(--tree-width,46%)) 12px minmax(340px,1fr)}
+.panel-splitter{position:relative;z-index:5;display:flex;align-items:center;justify-content:center;cursor:col-resize;touch-action:none;user-select:none;background:transparent;outline:none;transition:background .15s}
+.panel-splitter:before{content:"";position:absolute;top:0;bottom:0;left:5px;width:1px;background:var(--line);transition:background .15s,width .15s,left .15s}
+.panel-splitter:hover:before,.panel-splitter:focus-visible:before,.layout.is-resizing .panel-splitter:before{left:4px;width:3px;background:var(--accent)}
+.splitter-grip{position:relative;display:flex;align-items:center;justify-content:center;gap:2px;width:12px;height:42px;border:1px solid var(--line);border-radius:8px;background:var(--paper);box-shadow:0 2px 8px #24282012;opacity:.65;transition:opacity .15s,transform .15s}
+.panel-splitter:hover .splitter-grip,.panel-splitter:focus-visible .splitter-grip,.layout.is-resizing .splitter-grip{opacity:1;transform:scale(1.04)}
+.splitter-grip i{display:block;width:1px;height:12px;border-radius:2px;background:var(--muted);opacity:.8}
+.layout.is-resizing,.layout.is-resizing *{cursor:col-resize!important;user-select:none!important}
+.layout.is-resizing .main,.layout.is-resizing .right-panel{pointer-events:none}
+.layout.single-view{grid-template-columns:190px minmax(0,1fr) 0 0}
+.layout.sidebar-hidden.single-view{grid-template-columns:0 minmax(0,1fr) 0 0}
+.layout.single-view .panel-splitter{display:none}
+@media(max-width:1050px) and (min-width:761px){
+ .layout{grid-template-columns:160px minmax(260px,var(--tree-width,44%)) 10px minmax(300px,1fr)}
+ .layout.sidebar-hidden{grid-template-columns:0 minmax(260px,var(--tree-width,44%)) 10px minmax(300px,1fr)}
+}
+@media(max-width:760px){
+ .layout,.layout.sidebar-hidden{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto 1fr;height:calc(100vh - 58px);overflow:auto}
+ .panel-splitter{display:none}
+ .right-panel{display:block!important}
+ .layout.single-view,.layout.sidebar-hidden.single-view{grid-template-columns:minmax(0,1fr)}
+}
