@@ -1,4 +1,4 @@
-import { db } from "hatchable";
+import { db, auth } from "hatchable";
 export const access = "public";
 export const methods = ["GET","POST"];
 export default async function(req,res){
@@ -9,7 +9,7 @@ export default async function(req,res){
     if(!rows.length)return res.status(404).json({error:"Topic not found"});
     return res.json({topic:rows[0]});
   }
-  const user=req.user;
+  const user=await auth.getUser(req);
   if(!user)return res.status(401).json({error:"Please sign in to edit topic resources"});
   const body=req.body||{};
   const payload={
