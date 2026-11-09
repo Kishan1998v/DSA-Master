@@ -1,0 +1,4 @@
+import { db } from "hatchable";
+export const access = "user";
+export const methods = ["GET","POST"];
+export default async function(req,res){const u=req.user;if(req.method==="GET"){const {rows}=await db.query("SELECT n.*,t.title AS topic_title FROM notes n LEFT JOIN topics t ON t.slug=n.topic_slug WHERE n.user_id=$1 ORDER BY n.updated_at DESC",[u.id]);return res.json({notes:rows});}const b=req.body||{};const title=String(b.title||"").trim();if(!title)return res.status(400).json({error:"Note title required"});const {rows}=await db.query("INSERT INTO notes(user_id,title,body,topic_slug) VALUES($1,$2,$3,$4) RETURNING *",[u.id,title,String(b.body||""),b.topic_slug||null]);res.status(201).json({note:rows[0]});}

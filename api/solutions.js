@@ -1,0 +1,4 @@
+import { db } from "hatchable";
+export const access = "user";
+export const methods = ["GET","POST"];
+export default async function(req,res){const u=req.user;if(req.method==="GET"){const {rows}=await db.query("SELECT s.*,p.title AS problem_title FROM solutions s LEFT JOIN problems p ON p.id=s.problem_id WHERE s.user_id=$1 ORDER BY s.updated_at DESC",[u.id]);return res.json({solutions:rows});}const b=req.body||{};const title=String(b.title||"").trim();if(!title)return res.status(400).json({error:"Solution title required"});const {rows}=await db.query("INSERT INTO solutions(user_id,problem_id,title,language,code,approach,explanation,time_complexity,space_complexity) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *",[u.id,b.problem_id||null,title,String(b.language||"Java"),String(b.code||""),String(b.approach||""),String(b.explanation||""),String(b.time_complexity||""),String(b.space_complexity||"")]);res.status(201).json({solution:rows[0]});}
