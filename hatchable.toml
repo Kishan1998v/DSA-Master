@@ -23,3 +23,7 @@ write = "own"
 [db.tables.topic_progress]
 read = "own"
 write = "own"
+
+[db.tables.topic_pdfs]
+read = "own"
+write = "own"

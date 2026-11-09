@@ -1,4 +1,4 @@
-import { db, storage } from "hatchable";
+import { db, storage, auth } from "hatchable";
 import crypto from "node:crypto";
 
 export const access = "user";
@@ -6,7 +6,7 @@ export const methods = ["GET","POST","DELETE"];
 const MAX_BYTES = 25 * 1024 * 1024;
 
 export default async function(req,res){
-  const user=req.user;
+  const user=await auth.getUser(req);
   if(!user)return res.status(401).json({error:"Please sign in to manage PDFs"});
   if(req.method==="GET"){
     const slug=String(req.query?.slug||"").trim();
@@ -32,13 +32,13 @@ export default async function(req,res){
   if(file.buffer.length>MAX_BYTES)return res.status(413).json({error:"PDF is too large. Maximum size is 25 MB."});
   const fileBuffer=Buffer.isBuffer(file.buffer)?file.buffer:Buffer.from(file.buffer||[]);
   // Some valid PDFs include a small preamble before the %PDF- header.
-  // The PDF header is permitted within the first 1024 bytes.
-  const headerOffset=fileBuffer.subarray(0,1024).indexOf(Buffer.from("%PDF-","ascii"));
+  // Use Buffer.from with its default encoding; the runtime does not support the "ascii" alias.
+  const headerOffset=fileBuffer.subarray(0,1024).indexOf(Buffer.from("%PDF-"));
   if(headerOffset<0)return res.status(415).json({error:"This file does not appear to be a valid PDF. Please choose an actual .pdf file."});
   const safeName=String(file.filename||"document.pdf").replace(/[\\/\\\\]/g,"_").slice(0,180);
   const key="topic-pdfs/"+user.id+"/"+slug+"/"+crypto.randomUUID()+".pdf";
-  await storage.put(key,file.buffer,"application/pdf");
-  const {rows}=await db.query("INSERT INTO topic_pdfs(user_id,topic_slug,file_name,storage_key,bytes) VALUES($1,$2,$3,$4,$5) RETURNING id,file_name,bytes,created_at",[user.id,slug,safeName,key,file.buffer.length]);
+  await storage.put(key,fileBuffer,"application/pdf");
+  const {rows}=await db.query("INSERT INTO topic_pdfs(user_id,topic_slug,file_name,storage_key,bytes) VALUES($1,$2,$3,$4,$5) RETURNING id,file_name,bytes,created_at",[user.id,slug,safeName,key,fileBuffer.length]);
   const row=rows[0];
   return res.status(201).json({file:{id:row.id,file_name:row.file_name,bytes:Number(row.bytes),created_at:row.created_at,url:await storage.url(key)}});
 }
