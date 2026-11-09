@@ -29,12 +29,20 @@ export default async function(req,res){
   if(!topic.rows.length)return res.status(404).json({error:"Topic not found"});
   const file=(req.files||[]).find(f=>f.field==="file");
   if(!file)return res.status(400).json({error:"Choose a PDF file"});
-  if(file.buffer.length>MAX_BYTES)return res.status(413).json({error:"PDF is too large. Maximum size is 25 MB."});
-  const fileBuffer=Buffer.isBuffer(file.buffer)?file.buffer:Buffer.from(file.buffer||[]);
-  // Some valid PDFs include a small preamble before the %PDF- header.
-  // Use Buffer.from with its default encoding; the runtime does not support the "ascii" alias.
-  const headerOffset=fileBuffer.subarray(0,1024).indexOf(Buffer.from("%PDF-"));
-  if(headerOffset<0)return res.status(415).json({error:"This file does not appear to be a valid PDF. Please choose an actual .pdf file."});
+  const raw=file.buffer;
+  let fileBuffer;
+  if(Buffer.isBuffer(raw)) fileBuffer=raw;
+  else if(raw instanceof ArrayBuffer) fileBuffer=Buffer.from(raw);
+  else if(ArrayBuffer.isView(raw)) fileBuffer=Buffer.from(raw.buffer,raw.byteOffset,raw.byteLength);
+  else if(raw && raw.type==="Buffer" && Array.isArray(raw.data)) fileBuffer=Buffer.from(raw.data);
+  else if(Array.isArray(raw)) fileBuffer=Buffer.from(raw);
+  else if(typeof raw==="string") { const prefix="data:application/pdf;base64,"; fileBuffer=Buffer.from(raw.startsWith(prefix)?raw.slice(prefix.length):raw,"base64"); }
+  else fileBuffer=Buffer.alloc(0);
+  if(fileBuffer.length>MAX_BYTES)return res.status(413).json({error:"PDF is too large. Maximum size is 25 MB."});
+  const headerText=fileBuffer.subarray(0,1024).toString("latin1");
+  const headerOffset=headerText.indexOf("%PDF-");
+  console.log("PDF_UPLOAD_CHECK",JSON.stringify({filename:file.filename,contentType:file.contentType,rawType:raw?.constructor?.name,rawKeys:raw&&typeof raw==="object"?Object.keys(raw).slice(0,8):[],bytes:fileBuffer.length,headerBytes:fileBuffer.subarray(0,24).toString("hex"),headerOffset}));
+  if(headerOffset<0)return res.status(415).json({error:"The uploaded file did not arrive as PDF bytes. Try exporting or downloading it as a PDF and upload it again."});
   const safeName=String(file.filename||"document.pdf").replace(/[\\/\\\\]/g,"_").slice(0,180);
   const key="topic-pdfs/"+user.id+"/"+slug+"/"+crypto.randomUUID()+".pdf";
   await storage.put(key,fileBuffer,"application/pdf");
