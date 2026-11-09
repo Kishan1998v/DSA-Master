@@ -18,3 +18,21 @@ html[data-palette] .theme-menu button{color:var(--ink)!important}
 html[data-palette] .resource-card,html[data-palette] .topic-question,html[data-palette] .note-reading,html[data-palette] .thread-links button,html[data-palette] .mini-item{background:var(--warm)!important;color:var(--ink)!important}
 html[data-palette] .progress-track,html[data-palette] .status-track{background:var(--warm)!important}
 html[data-palette] .children{border-left-color:var(--line)!important}
+
+/* White preset and custom theme maker */
+html[data-palette="white"]{color-scheme:light}
+.white-dots{background:linear-gradient(135deg,#fff 0 48%,#e8e8e8 49% 100%);border:1px solid #ddd}
+.theme-menu-divider{height:1px;background:var(--line);margin:6px 8px}
+.theme-maker-trigger{width:100%;display:flex;align-items:center;gap:10px;padding:10px;border:0;background:transparent;text-align:left;color:var(--ink);border-radius:8px;cursor:pointer}
+.theme-maker-trigger:hover{background:var(--warm)}
+.theme-maker-icon{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);font-size:16px}
+.theme-maker-trigger span:last-child{display:grid;gap:3px}.theme-maker-trigger b{font-size:12px}.theme-maker-trigger small{font-size:10px;color:var(--muted)}
+.theme-maker{position:absolute;z-index:100;right:16px;top:58px;width:280px;padding:16px;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:13px;box-shadow:0 16px 48px #25251f20}
+.theme-maker[hidden]{display:none!important}
+.theme-maker-head{display:flex;justify-content:space-between;align-items:center;font-size:14px}
+.theme-maker-head button{border:0;background:transparent;color:var(--muted);font-size:20px;cursor:pointer}
+.theme-maker p{font-size:11px;color:var(--muted);margin:5px 0 12px}
+.theme-maker label{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:7px 0;font-size:11px;color:var(--ink)}
+.theme-maker input[type=color]{width:42px;height:28px;padding:2px;border:1px solid var(--line);border-radius:6px;background:var(--surface);cursor:pointer}
+.theme-maker-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}
+@media(max-width:600px){.theme-maker{position:fixed;top:70px;right:12px;left:12px;width:auto}}
