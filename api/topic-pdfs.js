@@ -30,8 +30,11 @@ export default async function(req,res){
   const file=(req.files||[]).find(f=>f.field==="file");
   if(!file)return res.status(400).json({error:"Choose a PDF file"});
   if(file.buffer.length>MAX_BYTES)return res.status(413).json({error:"PDF is too large. Maximum size is 25 MB."});
-  const signature=file.buffer.subarray(0,5).toString("ascii");
-  if(signature!=="%PDF-")return res.status(415).json({error:"This file does not appear to be a valid PDF"});
+  const fileBuffer=Buffer.isBuffer(file.buffer)?file.buffer:Buffer.from(file.buffer||[]);
+  // Some valid PDFs include a small preamble before the %PDF- header.
+  // The PDF header is permitted within the first 1024 bytes.
+  const headerOffset=fileBuffer.subarray(0,1024).indexOf(Buffer.from("%PDF-","ascii"));
+  if(headerOffset<0)return res.status(415).json({error:"This file does not appear to be a valid PDF. Please choose an actual .pdf file."});
   const safeName=String(file.filename||"document.pdf").replace(/[\\/\\\\]/g,"_").slice(0,180);
   const key="topic-pdfs/"+user.id+"/"+slug+"/"+crypto.randomUUID()+".pdf";
   await storage.put(key,file.buffer,"application/pdf");
