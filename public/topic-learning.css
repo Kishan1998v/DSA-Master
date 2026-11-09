@@ -1,0 +1,19 @@
+/* Topic learning workspace */
+.category-grid{grid-template-columns:minmax(0,1fr);gap:16px}
+.topic-check{width:25px;height:25px;flex:none;border:1px solid #D8C9B7;border-radius:8px;background:#F7F1E8;color:#80634C;font-size:15px;font-weight:900;display:grid;place-items:center;padding:0}
+.topic-check:hover{border-color:#82977C;background:#E8EFE4}
+.topic-check.checked{background:#82977C;border-color:#82977C;color:white}
+.topic-theory{width:100%;min-height:210px;resize:vertical;border:1px solid var(--line);border-radius:11px;background:#FFFCF7;color:var(--ink);padding:11px;font:12px/1.65 ui-monospace,SFMono-Regular,Menlo,monospace;outline:none}
+.resource-links{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.resource-links a,.topic-question a{font-size:11px;color:var(--mocha);font-weight:750;text-decoration:none}
+.resource-links a:hover,.topic-question a:hover{text-decoration:underline}
+.question-heading{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.question-heading h3{margin:0}
+.topic-questions{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.topic-question{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px;background:#F5F0E7;border:1px solid #E9DFD1;border-radius:10px}
+.topic-question strong{display:block;font-size:11px}
+.topic-question small{display:block;color:var(--muted);font-size:10px;margin-top:4px}
+.topic-question a{white-space:nowrap}
+.topic-resources .field{margin:10px 0}
+.topic-resources .field input{font-size:11px}
+@media(max-width:760px){.category-grid{grid-template-columns:minmax(0,1fr)}}
